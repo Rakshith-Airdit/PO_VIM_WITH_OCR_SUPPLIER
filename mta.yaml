@@ -1,0 +1,93 @@
+_schema-version: "3.2"
+ID: PO_VIM_WITH_OCR_SUPPLIER
+version: 0.0.1
+modules:
+- name: PO_VIM_WITH_OCR_SUPPLIER-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: PO_VIM_WITH_OCR_SUPPLIER-destination-service
+    parameters:
+      content-target: true
+  - name: PO_VIM_WITH_OCR_SUPPLIER_html_repo_host
+    parameters:
+      service-key:
+        name: PO_VIM_WITH_OCR_SUPPLIER_html_repo_host-key
+  - name: uaa_PO_VIM_WITH_OCR_SUPPLIER
+    parameters:
+      service-key:
+        name: uaa_PO_VIM_WITH_OCR_SUPPLIER-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: PO_VIM_WITH_OCR_SUPPLIER_PO_VIM_WITH_OCR_SUPPLIER_html_repo_host
+          ServiceInstanceName: PO_VIM_WITH_OCR_SUPPLIER-html5-app-host-service
+          ServiceKeyName: PO_VIM_WITH_OCR_SUPPLIER_html_repo_host-key
+          sap.cloud.service: PO_VIM_WITH_OCR_SUPPLIER
+        - Authentication: OAuth2UserTokenExchange
+          Name: PO_VIM_WITH_OCR_SUPPLIER_uaa_PO_VIM_WITH_OCR_SUPPLIER
+          ServiceInstanceName: PO_VIM_WITH_OCR_SUPPLIER-xsuaa-service
+          ServiceKeyName: uaa_PO_VIM_WITH_OCR_SUPPLIER-key
+          sap.cloud.service: PO_VIM_WITH_OCR_SUPPLIER
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: PO_VIM_WITH_OCR_SUPPLIER-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: PO_VIM_WITH_OCR_SUPPLIER_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - compovimwithocrsupplierpovimwithocrsupplierside.zip
+      name: compovimwithocrsupplierpovimwithocrsupplierside
+      target-path: resources/
+- name: compovimwithocrsupplierpovimwithocrsupplierside
+  type: html5
+  path: po-vim-with-ocr-supplier-side
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: PO_VIM_WITH_OCR_SUPPLIER-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: PO_VIM_WITH_OCR_SUPPLIER-destination-service
+    service-plan: lite
+- name: PO_VIM_WITH_OCR_SUPPLIER_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: PO_VIM_WITH_OCR_SUPPLIER-html5-app-host-service
+    service-plan: app-host
+- name: uaa_PO_VIM_WITH_OCR_SUPPLIER
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: PO_VIM_WITH_OCR_SUPPLIER-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true

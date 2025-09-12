@@ -1,0 +1,154 @@
+{
+  "_version": "1.76.0",
+  "sap.app": {
+    "id": "com.povimwithocrsupplier.povimwithocrsupplierside",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.18.6",
+      "toolsId": "92ddcdb4-84e3-4a46-aa4e-04e76ef8ede9"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v2/po-vim-with-ocr-supplier-side/",
+        "type": "OData",
+        "settings": {
+          "annotations": ["annotation"],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "annotation": {
+        "type": "ODataAnnotation",
+        "uri": "annotations/annotation.xml",
+        "settings": {
+          "localUri": "annotations/annotation.xml"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "PO_VIM_WITH_OCR_SUPPLIER-DISPLAY": {
+          "semanticObject": "PO_VIM_WITH_OCR_SUPPLIER",
+          "action": "DISPLAY",
+          "title": "{{PO_VIM_WITH_OCR_SUPPLIER-DISPLAY.flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.140.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.povimwithocrsupplier.povimwithocrsupplierside.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.povimwithocrsupplier.povimwithocrsupplierside.view",
+        "async": true,
+        "viewPath": "com.povimwithocrsupplier.povimwithocrsupplierside.view"
+      },
+      "routes": [
+        {
+          "name": "RouteInvoiceList",
+          "pattern": ":?query:",
+          "target": ["TargetInvoiceList"]
+        },
+        {
+          "name": "RouteCreateInvoice",
+          "pattern": "createInvoice",
+          "target": ["TargetCreateInvoice"]
+        },
+        {
+          "name": "RouteInvoiceDetails",
+          "pattern": "invoiceDetails/{poNumber}/{reqNumber}",
+          "target": ["TargetInvoiceDetails"]
+        }
+      ],
+      "targets": {
+        "TargetInvoiceList": {
+          "id": "InvoiceList",
+          "name": "InvoiceList"
+        },
+        "TargetCreateInvoice": {
+          "id": "CreateInvoice",
+          "name": "CreateInvoice"
+        },
+        "TargetInvoiceDetails": {
+          "id": "InvoiceDetails",
+          "name": "InvoiceDetails"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.povimwithocrsupplier.povimwithocrsupplierside.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "PO_VIM_WITH_OCR_SUPPLIER"
+  }
+}

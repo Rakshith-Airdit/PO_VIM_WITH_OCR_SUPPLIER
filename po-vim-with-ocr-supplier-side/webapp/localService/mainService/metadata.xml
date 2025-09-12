@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="PO_VIM_WITH_OCR_SUPPLIER_SIDE" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="PendingTab" EntityType="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab"/>
+                <EntitySet Name="ApprovedTab" EntityType="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab"/>
+                <EntitySet Name="RejectedTab" EntityType="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab"/>
+                <EntitySet Name="VIM_PO_OCR_HEAD" EntityType="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD"/>
+                <EntitySet Name="VIM_PO_OCR_ITEM" EntityType="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_ITEM"/>
+                <EntitySet Name="Attachment_PO_VIM_OCR" EntityType="PO_VIM_WITH_OCR_SUPPLIER_SIDE.Attachment_PO_VIM_OCR"/>
+                <FunctionImport Name="PostPOVimDatawithOCR" ReturnType="Edm.String" m:HttpMethod="POST">
+                    <Parameter Name="action" Type="Edm.String" Mode="In" Nullable="true"/>
+                    <Parameter Name="REQUEST_NO" Type="Edm.Int32" Mode="In" Nullable="true"/>
+                    <Parameter Name="PoVimhead" Type="Collection(PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD)" Nullable="false" Mode="In"/>
+                    <Parameter Name="PoVimitem" Type="Collection(PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_ITEM)" Nullable="false" Mode="In"/>
+                    <Parameter Name="Attachment" Type="Collection(PO_VIM_WITH_OCR_SUPPLIER_SIDE.Attachment_PO_VIM_OCR)" Nullable="false" Mode="In"/>
+                </FunctionImport>
+                <AssociationSet Name="PendingTab_TO_VIM_PO_OCR_ITEM" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab_TO_VIM_PO_OCR_ITEM">
+                    <End Role="PendingTab" EntitySet="PendingTab"/>
+                    <End Role="VIM_PO_OCR_ITEM" EntitySet="VIM_PO_OCR_ITEM"/>
+                </AssociationSet>
+                <AssociationSet Name="PendingTab_ATTACHMENTS" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab_ATTACHMENTS">
+                    <End Role="PendingTab" EntitySet="PendingTab"/>
+                    <End Role="Attachment_PO_VIM_OCR" EntitySet="Attachment_PO_VIM_OCR"/>
+                </AssociationSet>
+                <AssociationSet Name="ApprovedTab_TO_VIM_PO_OCR_ITEM" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab_TO_VIM_PO_OCR_ITEM">
+                    <End Role="ApprovedTab" EntitySet="ApprovedTab"/>
+                    <End Role="VIM_PO_OCR_ITEM" EntitySet="VIM_PO_OCR_ITEM"/>
+                </AssociationSet>
+                <AssociationSet Name="ApprovedTab_ATTACHMENTS" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab_ATTACHMENTS">
+                    <End Role="ApprovedTab" EntitySet="ApprovedTab"/>
+                    <End Role="Attachment_PO_VIM_OCR" EntitySet="Attachment_PO_VIM_OCR"/>
+                </AssociationSet>
+                <AssociationSet Name="RejectedTab_TO_VIM_PO_OCR_ITEM" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab_TO_VIM_PO_OCR_ITEM">
+                    <End Role="RejectedTab" EntitySet="RejectedTab"/>
+                    <End Role="VIM_PO_OCR_ITEM" EntitySet="VIM_PO_OCR_ITEM"/>
+                </AssociationSet>
+                <AssociationSet Name="RejectedTab_ATTACHMENTS" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab_ATTACHMENTS">
+                    <End Role="RejectedTab" EntitySet="RejectedTab"/>
+                    <End Role="Attachment_PO_VIM_OCR" EntitySet="Attachment_PO_VIM_OCR"/>
+                </AssociationSet>
+                <AssociationSet Name="VIM_PO_OCR_HEAD_TO_VIM_PO_OCR_ITEM" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD_TO_VIM_PO_OCR_ITEM">
+                    <End Role="VIM_PO_OCR_HEAD" EntitySet="VIM_PO_OCR_HEAD"/>
+                    <End Role="VIM_PO_OCR_ITEM" EntitySet="VIM_PO_OCR_ITEM"/>
+                </AssociationSet>
+                <AssociationSet Name="VIM_PO_OCR_HEAD_ATTACHMENTS" Association="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD_ATTACHMENTS">
+                    <End Role="VIM_PO_OCR_HEAD" EntitySet="VIM_PO_OCR_HEAD"/>
+                    <End Role="Attachment_PO_VIM_OCR" EntitySet="Attachment_PO_VIM_OCR"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="PendingTab">
+                <Key>
+                    <PropertyRef Name="REQUEST_NO"/>
+                </Key>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="INVOICE_NO" Type="Edm.String"/>
+                <Property Name="APPROVED_COMMENT" Type="Edm.String"/>
+                <Property Name="REJECTED_COMMENT" Type="Edm.String"/>
+                <Property Name="SUPPLIER" Type="Edm.String"/>
+                <Property Name="PO_NUMBER" Type="Edm.String"/>
+                <Property Name="INVOICE_AMOUNT" Type="Edm.String"/>
+                <Property Name="INVOICE_DATE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_EMAIL" Type="Edm.String"/>
+                <Property Name="SUPPLIER_NUMBER" Type="Edm.String"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_CODE" Type="Edm.String"/>
+                <Property Name="VENDOR_ADDRESS" Type="Edm.String"/>
+                <Property Name="BANK_ACCOUNT_NO" Type="Edm.String"/>
+                <Property Name="BANK_NAME" Type="Edm.String"/>
+                <Property Name="PURCHASE_ORG" Type="Edm.String"/>
+                <Property Name="STATUS_DESC" Type="Edm.String"/>
+                <Property Name="PURCHASE_GROUP" Type="Edm.String"/>
+                <Property Name="CURRENCY" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_AMOUNT" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_PERCENTAGE" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_DUE_DATE" Type="Edm.String"/>
+                <NavigationProperty Name="TO_VIM_PO_OCR_ITEM" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab_TO_VIM_PO_OCR_ITEM" FromRole="PendingTab" ToRole="VIM_PO_OCR_ITEM"/>
+                <NavigationProperty Name="ATTACHMENTS" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab_ATTACHMENTS" FromRole="PendingTab" ToRole="Attachment_PO_VIM_OCR"/>
+            </EntityType>
+            <EntityType Name="ApprovedTab">
+                <Key>
+                    <PropertyRef Name="REQUEST_NO"/>
+                </Key>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="INVOICE_NO" Type="Edm.String"/>
+                <Property Name="APPROVED_COMMENT" Type="Edm.String"/>
+                <Property Name="REJECTED_COMMENT" Type="Edm.String"/>
+                <Property Name="SUPPLIER" Type="Edm.String"/>
+                <Property Name="PO_NUMBER" Type="Edm.String"/>
+                <Property Name="INVOICE_AMOUNT" Type="Edm.String"/>
+                <Property Name="INVOICE_DATE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_EMAIL" Type="Edm.String"/>
+                <Property Name="SUPPLIER_NUMBER" Type="Edm.String"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_CODE" Type="Edm.String"/>
+                <Property Name="VENDOR_ADDRESS" Type="Edm.String"/>
+                <Property Name="BANK_ACCOUNT_NO" Type="Edm.String"/>
+                <Property Name="BANK_NAME" Type="Edm.String"/>
+                <Property Name="PURCHASE_ORG" Type="Edm.String"/>
+                <Property Name="STATUS_DESC" Type="Edm.String"/>
+                <Property Name="PURCHASE_GROUP" Type="Edm.String"/>
+                <Property Name="CURRENCY" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_AMOUNT" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_PERCENTAGE" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_DUE_DATE" Type="Edm.String"/>
+                <NavigationProperty Name="TO_VIM_PO_OCR_ITEM" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab_TO_VIM_PO_OCR_ITEM" FromRole="ApprovedTab" ToRole="VIM_PO_OCR_ITEM"/>
+                <NavigationProperty Name="ATTACHMENTS" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab_ATTACHMENTS" FromRole="ApprovedTab" ToRole="Attachment_PO_VIM_OCR"/>
+            </EntityType>
+            <EntityType Name="RejectedTab">
+                <Key>
+                    <PropertyRef Name="REQUEST_NO"/>
+                </Key>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="INVOICE_NO" Type="Edm.String"/>
+                <Property Name="APPROVED_COMMENT" Type="Edm.String"/>
+                <Property Name="REJECTED_COMMENT" Type="Edm.String"/>
+                <Property Name="SUPPLIER" Type="Edm.String"/>
+                <Property Name="PO_NUMBER" Type="Edm.String"/>
+                <Property Name="INVOICE_AMOUNT" Type="Edm.String"/>
+                <Property Name="INVOICE_DATE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_EMAIL" Type="Edm.String"/>
+                <Property Name="SUPPLIER_NUMBER" Type="Edm.String"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_CODE" Type="Edm.String"/>
+                <Property Name="VENDOR_ADDRESS" Type="Edm.String"/>
+                <Property Name="BANK_ACCOUNT_NO" Type="Edm.String"/>
+                <Property Name="BANK_NAME" Type="Edm.String"/>
+                <Property Name="PURCHASE_ORG" Type="Edm.String"/>
+                <Property Name="STATUS_DESC" Type="Edm.String"/>
+                <Property Name="PURCHASE_GROUP" Type="Edm.String"/>
+                <Property Name="CURRENCY" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_AMOUNT" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_PERCENTAGE" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_DUE_DATE" Type="Edm.String"/>
+                <NavigationProperty Name="TO_VIM_PO_OCR_ITEM" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab_TO_VIM_PO_OCR_ITEM" FromRole="RejectedTab" ToRole="VIM_PO_OCR_ITEM"/>
+                <NavigationProperty Name="ATTACHMENTS" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab_ATTACHMENTS" FromRole="RejectedTab" ToRole="Attachment_PO_VIM_OCR"/>
+            </EntityType>
+            <EntityType Name="VIM_PO_OCR_HEAD">
+                <Key>
+                    <PropertyRef Name="REQUEST_NO"/>
+                </Key>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="STATUS" Type="Edm.Int32"/>
+                <Property Name="INVOICE_NO" Type="Edm.String"/>
+                <Property Name="APPROVED_COMMENT" Type="Edm.String"/>
+                <Property Name="REJECTED_COMMENT" Type="Edm.String"/>
+                <Property Name="SUPPLIER" Type="Edm.String"/>
+                <Property Name="PO_NUMBER" Type="Edm.String"/>
+                <Property Name="INVOICE_AMOUNT" Type="Edm.String"/>
+                <Property Name="INVOICE_DATE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_EMAIL" Type="Edm.String"/>
+                <Property Name="SUPPLIER_NUMBER" Type="Edm.String"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String"/>
+                <Property Name="SUPPLIER_CODE" Type="Edm.String"/>
+                <Property Name="VENDOR_ADDRESS" Type="Edm.String"/>
+                <Property Name="BANK_ACCOUNT_NO" Type="Edm.String"/>
+                <Property Name="BANK_NAME" Type="Edm.String"/>
+                <Property Name="PURCHASE_ORG" Type="Edm.String"/>
+                <Property Name="STATUS_DESC" Type="Edm.String"/>
+                <Property Name="PURCHASE_GROUP" Type="Edm.String"/>
+                <Property Name="CURRENCY" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_AMOUNT" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_PERCENTAGE" Type="Edm.String"/>
+                <Property Name="DOWNPAYMENT_DUE_DATE" Type="Edm.String"/>
+                <NavigationProperty Name="TO_VIM_PO_OCR_ITEM" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD_TO_VIM_PO_OCR_ITEM" FromRole="VIM_PO_OCR_HEAD" ToRole="VIM_PO_OCR_ITEM"/>
+                <NavigationProperty Name="ATTACHMENTS" Relationship="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD_ATTACHMENTS" FromRole="VIM_PO_OCR_HEAD" ToRole="Attachment_PO_VIM_OCR"/>
+            </EntityType>
+            <EntityType Name="VIM_PO_OCR_ITEM">
+                <Key>
+                    <PropertyRef Name="REQUEST_NO"/>
+                </Key>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="SR_NO" Type="Edm.String"/>
+                <Property Name="PO_NUMBER" Type="Edm.String"/>
+                <Property Name="ITEM_NO" Type="Edm.String"/>
+                <Property Name="PO_DATE" Type="Edm.String"/>
+                <Property Name="UNIT_RATE" Type="Edm.String"/>
+                <Property Name="COMPANY_CODE" Type="Edm.String"/>
+                <Property Name="GRN_QUANTITY" Type="Edm.String"/>
+                <Property Name="DISCOUNT" Type="Edm.String"/>
+                <Property Name="MATERIAL_NO" Type="Edm.String"/>
+                <Property Name="UNITS_OF_MEASURE" Type="Edm.String"/>
+                <Property Name="ORDERED_QUANTITY" Type="Edm.String"/>
+                <Property Name="TOTAL_PRICE" Type="Edm.String"/>
+                <Property Name="MATERIAL_DESCRIPTION" Type="Edm.String"/>
+                <Property Name="CURRENCY" Type="Edm.String"/>
+                <Property Name="INVOICED_QUANTITY" Type="Edm.String"/>
+                <Property Name="INVOICED_PRICE" Type="Edm.String"/>
+                <Property Name="QTY_MATCH_STATUS" Type="Edm.String"/>
+                <Property Name="PRICE_MATCH_STATUS" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Attachment_PO_VIM_OCR">
+                <Key>
+                    <PropertyRef Name="VendorCode"/>
+                    <PropertyRef Name="REQUEST_NO"/>
+                    <PropertyRef Name="ATTACHMENT_ID"/>
+                </Key>
+                <Property Name="VendorCode" Type="Edm.String" Nullable="false"/>
+                <Property Name="REQUEST_NO" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="DESCRIPTION" Type="Edm.String"/>
+                <Property Name="IMAGEURL" Type="Edm.String"/>
+                <Property Name="IMAGE_FILE_NAME" Type="Edm.String"/>
+                <Property Name="COMMENT" Type="Edm.String"/>
+                <Property Name="STATUS" Type="Edm.String"/>
+                <Property Name="ATTACHMENT_ID" Type="Edm.String" Nullable="false"/>
+            </EntityType>
+            <Association Name="PendingTab_TO_VIM_PO_OCR_ITEM">
+                <End Role="PendingTab" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab" Multiplicity="*"/>
+                <End Role="VIM_PO_OCR_ITEM" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_ITEM" Multiplicity="*"/>
+            </Association>
+            <Association Name="PendingTab_ATTACHMENTS">
+                <End Role="PendingTab" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.PendingTab" Multiplicity="*"/>
+                <End Role="Attachment_PO_VIM_OCR" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.Attachment_PO_VIM_OCR" Multiplicity="*"/>
+            </Association>
+            <Association Name="ApprovedTab_TO_VIM_PO_OCR_ITEM">
+                <End Role="ApprovedTab" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab" Multiplicity="*"/>
+                <End Role="VIM_PO_OCR_ITEM" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_ITEM" Multiplicity="*"/>
+            </Association>
+            <Association Name="ApprovedTab_ATTACHMENTS">
+                <End Role="ApprovedTab" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.ApprovedTab" Multiplicity="*"/>
+                <End Role="Attachment_PO_VIM_OCR" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.Attachment_PO_VIM_OCR" Multiplicity="*"/>
+            </Association>
+            <Association Name="RejectedTab_TO_VIM_PO_OCR_ITEM">
+                <End Role="RejectedTab" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab" Multiplicity="*"/>
+                <End Role="VIM_PO_OCR_ITEM" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_ITEM" Multiplicity="*"/>
+            </Association>
+            <Association Name="RejectedTab_ATTACHMENTS">
+                <End Role="RejectedTab" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.RejectedTab" Multiplicity="*"/>
+                <End Role="Attachment_PO_VIM_OCR" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.Attachment_PO_VIM_OCR" Multiplicity="*"/>
+            </Association>
+            <Association Name="VIM_PO_OCR_HEAD_TO_VIM_PO_OCR_ITEM">
+                <End Role="VIM_PO_OCR_HEAD" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD" Multiplicity="*"/>
+                <End Role="VIM_PO_OCR_ITEM" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_ITEM" Multiplicity="*"/>
+            </Association>
+            <Association Name="VIM_PO_OCR_HEAD_ATTACHMENTS">
+                <End Role="VIM_PO_OCR_HEAD" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.VIM_PO_OCR_HEAD" Multiplicity="*"/>
+                <End Role="Attachment_PO_VIM_OCR" Type="PO_VIM_WITH_OCR_SUPPLIER_SIDE.Attachment_PO_VIM_OCR" Multiplicity="*"/>
+            </Association>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,93 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI" />
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication" />
+    </edmx:Reference>
+    <edmx:Reference Uri="/odata/v2/po-vim-with-ocr-supplier-side/$metadata">
+        <edmx:Include Namespace="PO_VIM_WITH_OCR_SUPPLIER_SIDE" Alias="SAP" />
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local">
+            <Annotations Target="SAP.PendingTab">
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>INVOICE_NO</PropertyPath>
+                        <PropertyPath>INVOICE_AMOUNT</PropertyPath>
+                        <PropertyPath>PO_NUMBER</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="INVOICE_NO" />
+                            <PropertyValue Property="Label" String="Invoice Number" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="INVOICE_AMOUNT" />
+                            <PropertyValue Property="Label" String="Invoice Amount" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PO_NUMBER" />
+                            <PropertyValue Property="Label" String="Purchase Order" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP.ApprovedTab">
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>INVOICE_NO</PropertyPath>
+                        <PropertyPath>INVOICE_AMOUNT</PropertyPath>
+                        <PropertyPath>PO_NUMBER</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="INVOICE_NO" />
+                            <PropertyValue Property="Label" String="Invoice Number" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="INVOICE_AMOUNT" />
+                            <PropertyValue Property="Label" String="Invoice Amount" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PO_NUMBER" />
+                            <PropertyValue Property="Label" String="Purchase Order" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP.RejectedTab">
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>INVOICE_NO</PropertyPath>
+                        <PropertyPath>INVOICE_AMOUNT</PropertyPath>
+                        <PropertyPath>PO_NUMBER</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="INVOICE_NO" />
+                            <PropertyValue Property="Label" String="Invoice Number" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="INVOICE_AMOUNT" />
+                            <PropertyValue Property="Label" String="Invoice Amount" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="PO_NUMBER" />
+                            <PropertyValue Property="Label" String="Purchase Order" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

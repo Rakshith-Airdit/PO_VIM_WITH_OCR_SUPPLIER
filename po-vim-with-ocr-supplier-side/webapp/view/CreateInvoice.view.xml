@@ -1,0 +1,192 @@
+<View
+    xmlns="sap.ui.core.mvc"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:upload="sap.m.upload"
+    xmlns:core="sap.ui.core"
+    xmlns:m="sap.m"
+    controllerName="com.povimwithocrsupplier.povimwithocrsupplierside.controller.CreateInvoice"
+>
+    <content>
+        <m:Page
+            id="idCreateInvoicePage"
+            floatingFooter="true"
+        >
+            <m:content>
+                <layout:ResponsiveSplitter
+                    defaultPane="idUploadPane"
+                    id="splitter0"
+                >
+                    <layout:rootPaneContainer>
+                        <layout:PaneContainer id="idCreateInvoicePaneContainer">
+                            <layout:panes>
+                                <layout:SplitPane
+                                    requiredParentWidth="50"
+                                    id="idUploadPane"
+                                >
+                                    <layout:content>
+                                        <m:Panel
+                                            height="100%"
+                                            backgroundDesign="Transparent"
+                                            id="panel0"
+                                        >
+                                            <m:content>
+                                                <m:VBox class="sapUiTinyMargin">
+                                                    <m:HBox
+                                                        justifyContent="End"
+                                                    >
+                                                        <m:Button
+                                                            icon="sap-icon://clear-all"
+                                                            id="idClearBtn"
+                                                            tooltip="Close Preview"
+                                                            press=".onClearPreview"
+                                                            visible="false"
+                                                        />
+                                                    </m:HBox>
+
+                                                    <m:VBox
+                                                        id="fileUploadContainer"
+                                                    >
+                                                        <upload:UploadSet
+                                                            id="uploadSet"
+                                                            instantUpload="true"
+                                                            uploadEnabled="true"
+                                                            beforeItemAdded="onBeforeItemAdded"
+                                                            maxFileSize="10"
+                                                            afterItemAdded="setVisibility"
+                                                            sameFilenameAllowed="false"
+                                                            multiple="false"
+                                                            visible="true"
+                                                        >
+                                                            <upload:toolbar />
+                                                        </upload:UploadSet>
+                                                        <core:HTML
+                                                            id="pdfPreview"
+                                                            content='&lt;iframe id="pdfFrame" width="100%" height="700px" style="border:none;"&gt;&lt;/iframe&gt;'
+                                                            sanitizeContent="false"
+                                                            visible="false"
+                                                        />
+                                                    </m:VBox>
+                                                </m:VBox>
+                                            </m:content>
+                                        </m:Panel>
+                                    </layout:content>
+                                </layout:SplitPane>
+
+                                <layout:SplitPane
+                                    requiredParentWidth="50"
+                                    id="pane1"
+                                >
+                                    <layout:content>
+                                        <m:Panel
+                                            height="100%"
+                                            backgroundDesign="Transparent"
+                                            id="panel1"
+                                        >
+                                            <m:content>
+                                                <form:Form
+                                                    editable="true"
+                                                    id="form0"
+                                                >
+                                                    <form:formContainers>
+                                                        <form:FormContainer
+                                                            title="Create Invoice"
+                                                            id="container2"
+                                                        >
+                                                            <form:formElements>
+                                                                <form:FormElement
+                                                                    label="Ref-PO"
+                                                                    id="element1"
+                                                                >
+                                                                    <form:fields
+                                                                    >
+                                                                        <m:Input
+                                                                            width="100%"
+                                                                            id="idRefPO"
+                                                                            type="Number"
+                                                                            placeholder="Reference PO Number"
+                                                                            required="true"
+                                                                        />
+                                                                    </form:fields>
+                                                                </form:FormElement>
+                                                                <form:FormElement
+                                                                    label="Invoice No"
+                                                                    id="element2"
+                                                                >
+                                                                    <form:fields
+                                                                    >
+                                                                        <m:Input
+                                                                            width="100%"
+                                                                            id="idInvoiceNumber"
+                                                                            placeholder="Invoice Number"
+                                                                            required="true"
+                                                                        />
+                                                                    </form:fields>
+                                                                </form:FormElement>
+                                                                <form:FormElement
+                                                                    label="Invoice Amount"
+                                                                    id="element3"
+                                                                >
+                                                                    <form:fields
+                                                                    >
+                                                                        <m:Input
+                                                                            width="100%"
+                                                                            type="Number"
+                                                                            id="idInvoiceAmount"
+                                                                            placeholder="Invoice Amount"
+                                                                            required="true"
+                                                                        />
+                                                                    </form:fields>
+                                                                </form:FormElement>
+                                                                <form:FormElement
+                                                                    label="Invoice Date"
+                                                                    id="element4"
+                                                                >
+                                                                    <form:fields
+                                                                    >
+                                                                        <m:DatePicker
+                                                                            id="idInvoiceDate"
+                                                                            placeholder="Invoice Date"
+                                                                            required="true"
+                                                                            displayFormat="yyyy-MM-dd"
+                                                                            valueFormat="yyyy-MM-dd"
+                                                                        />
+                                                                    </form:fields>
+                                                                </form:FormElement>
+                                                            </form:formElements>
+                                                        </form:FormContainer>
+                                                    </form:formContainers>
+                                                    <form:layout>
+                                                        <form:ResponsiveGridLayout
+                                                            id="layout0"
+                                                        />
+                                                    </form:layout>
+                                                </form:Form>
+                                            </m:content>
+                                        </m:Panel>
+                                    </layout:content>
+                                </layout:SplitPane>
+                            </layout:panes>
+                        </layout:PaneContainer>
+                    </layout:rootPaneContainer>
+                </layout:ResponsiveSplitter>
+            </m:content>
+
+            <m:footer>
+                <m:OverflowToolbar id="idCreateInvoiceFooterToolBar">
+                    <m:ToolbarSpacer />
+                    <m:Button
+                        type="Reject"
+                        text="Cancel"
+                        press=".onCancel"
+                    />
+                    <m:Button
+                        type="Accept"
+                        text="Submit"
+                        press=".onSave"
+                    />
+                </m:OverflowToolbar>
+            </m:footer>
+        </m:Page>
+    </content>
+</View>

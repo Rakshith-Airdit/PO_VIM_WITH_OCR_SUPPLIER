@@ -71,13 +71,16 @@
                             </m:VBox>
                         </m:HBox>
                     </snappedHeading>
-                    <!-- <actions>
-                    <m:Button
-                        icon="sap-icon://history"
-                        text="Logs"
-                        press="onPressLogs"
-                    />
-                </actions> -->
+                    <actions>
+                        <m:Button
+                            icon="sap-icon://edit"
+                            text="Edit"
+                            type="Default"
+                            visible="{= ${oHeaderModel>/results/0/STATUS_DESC} === 'Rejected' }"
+                            enabled="{= !${oEditStateModel>/isEditMode} }"
+                            press="onPressEdit"
+                        />
+                    </actions>
                 </ObjectPageDynamicHeaderTitle>
             </headerTitle>
 
@@ -263,12 +266,22 @@
                                                 </m:Column>
                                                 <m:Column width="auto">
                                                     <m:Text
+                                                        text="Invoice Quantity"
+                                                    />
+                                                </m:Column>
+                                                <m:Column width="auto">
+                                                    <m:Text
                                                         text="Invoiced Price"
                                                     />
                                                 </m:Column>
                                                 <m:Column width="auto">
                                                     <m:Text
                                                         text="Qty Match Status"
+                                                    />
+                                                </m:Column>
+                                                <m:Column width="auto">
+                                                    <m:Text
+                                                        text="Price Match Status"
                                                     />
                                                 </m:Column>
                                             </m:columns>
@@ -301,11 +314,37 @@
                                                         <m:Text
                                                             text="{oItemsModel>GRN_QUANTITY}"
                                                         />
-                                                        <m:Text
-                                                            text="{oItemsModel>INVOICED_PRICE}"
-                                                        />
-                                                        <m:Text
+                                                        <m:HBox>
+                                                            <m:Input
+                                                                visible="{= ${oHeaderModel>/results/0/STATUS_DESC} === 'Rejected'}"
+                                                                editable="{oEditStateModel>/isEditMode}"
+                                                                value="{oItemsModel>INVOICED_QUANTITY}"
+                                                            />
+                                                            <m:Text
+                                                                visible="{= ${oHeaderModel>/results/0/STATUS_DESC} !== 'Rejected'}"
+                                                                text="{oItemsModel>INVOICED_QUANTITY}"
+                                                            />
+                                                        </m:HBox>
+                                                        <m:HBox>
+                                                            <m:Input
+                                                                visible="{= ${oHeaderModel>/results/0/STATUS_DESC} === 'Rejected'}"
+                                                                editable="{oEditStateModel>/isEditMode}"
+                                                                value="{oItemsModel>INVOICED_PRICE}"
+                                                            />
+                                                            <m:Text
+                                                                visible="{= ${oHeaderModel>/results/0/STATUS_DESC} !== 'Rejected'}"
+                                                                text="{oItemsModel>INVOICED_PRICE}"
+                                                            />
+                                                        </m:HBox>
+                                                        <m:ObjectStatus
+                                                            inverted="true"
                                                             text="{oItemsModel>QTY_MATCH_STATUS}"
+                                                            state="{path: 'oItemsModel>QTY_MATCH_STATUS', formatter: '.formatQtyMatchStatus'}"
+                                                        />
+                                                        <m:ObjectStatus
+                                                            inverted="true"
+                                                            text="{oItemsModel>PRICE_MATCH_STATUS}"
+                                                            state="{path: 'oItemsModel>PRICE_MATCH_STATUS', formatter: '.formatPriceMatchStatus'}"
                                                         />
                                                     </m:cells>
                                                 </m:ColumnListItem>
@@ -439,6 +478,19 @@
                         type="Back"
                         text="Cancel"
                         press="handleClose"
+                    />
+                    <m:Button
+                        type="Emphasized"
+                        text="Re-Submit"
+                        press="onPressReSubmit"
+                        visible="{= ${oHeaderModel>/results/0/STATUS_DESC} === 'Rejected'}"
+                        enabled="{= ${oEditStateModel>/isEditMode} }"
+                    />
+                    <m:Button
+                        text="Cancel Edit"
+                        press="onPressCancelEdit"
+                        visible="{= ${oHeaderModel>/results/0/STATUS_DESC} === 'Rejected' &amp;&amp; ${oEditStateModel>/isEditMode}}"
+                        enabled="{= ${oEditStateModel>/isEditMode} }"
                     />
                     <!-- <m:Button
                     type="Success"

@@ -134,7 +134,7 @@
                     <IconTabFilter
                         text="Approved"
                         icon="sap-icon://task"
-                        id="filter1"
+                        id="idApprovedInvoices"
                     >
                         <content>
                             <smartTable:SmartTable
@@ -226,7 +226,7 @@
                     <IconTabFilter
                         text="Rejected"
                         icon="sap-icon://employee-rejections"
-                        id="filter2"
+                        id="idRejectedInvoices"
                     >
                         <content>
                             <smartTable:SmartTable

@@ -37,6 +37,10 @@ sap.ui.define(
             new JSONModel({ attachments: [] }),
             "oAttachmentsModel"
           );
+          this.getView().setModel(
+            new JSONModel({ isEditMode: false, isResubmitVisible: false }),
+            "oEditStateModel"
+          );
         },
 
         _onPatternMatched: async function (oEvent) {
@@ -132,6 +136,19 @@ sap.ui.define(
           });
         },
 
+        onPressEdit: function () {
+          let oEditStateModel = this.getView().getModel("oEditStateModel");
+          oEditStateModel.setProperty("/isEditMode", true);
+        },
+
+        // In your controller
+        onPressCancelEdit: function () {
+          let oEditStateModel = this.getView().getModel("oEditStateModel");
+          oEditStateModel.setProperty("/isEditMode", false);
+          // Optionally, refresh the model to discard unsaved changes
+          // this.getView().getModel("oItemsModel").refresh(true);
+        },
+
         _showError: function (
           sMessage = "Something went wrong, Please Try Again After Sometime",
           oOptions = {}
@@ -184,7 +201,7 @@ sap.ui.define(
           }
 
           // Now, perform the status check
-          if (sStatus.includes("In-Process")) {
+          if (sStatus.toLowerCase().includes("in-process")) {
             return "Indication17";
           } else if (sStatus === "Approved") {
             return "Indication13";
@@ -192,6 +209,160 @@ sap.ui.define(
             return "Indication11";
           }
           return "None";
+        },
+
+        formatQtyMatchStatus: function (sStatus) {
+          // Check if sStatus is null or undefined
+          if (!sStatus) {
+            return "None"; // or any other default state like "Indication05"
+          }
+
+          // Now, perform the status check
+          if (sStatus.toLowerCase().includes("partially delivered")) {
+            return "Indication13";
+          } else if (sStatus === "Pass") {
+            return "Indication14";
+          } else if (sStatus === "Fail") {
+            return "Indication11";
+          }
+          return "None";
+        },
+
+        formatPriceMatchStatus: function (sStatus) {
+          // Check if sStatus is null or undefined
+          if (!sStatus) {
+            return "None"; // or any other default state like "Indication05"
+          }
+
+          // Now, perform the status check
+          if (sStatus === "Pass") {
+            return "Indication14";
+          } else if (sStatus === "Fail") {
+            return "Indication11";
+          }
+          return "None";
+        },
+
+        _preparePayload: function () {
+          var oView = this.getView();
+          var oHeadModel = oView.getModel("oHeaderModel");
+          var oItemsModel = oView.getModel("oItemsModel");
+          var oAttachmentModel = oView.getModel("oAttachmentsModel");
+
+          debugger;
+          const {
+            REQUEST_NO,
+            SUPPLIER_NUMBER,
+            COMPANY_CODE,
+            SUPPLIER,
+            INVOICE_NO,
+            INVOICE_DATE,
+            PO_NUMBER,
+            INVOICE_AMOUNT,
+            VENDOR_ADDRESS,
+            BANK_ACCOUNT_NO,
+            BANK_NAME,
+            PURCHASE_ORG,
+            PURCHASE_GROUP,
+            CURRENCY,
+            DOWNPAYMENT_AMOUNT,
+            DOWNPAYMENT_PERCENTAGE,
+            DOWNPAYMENT_DUE_DATE,
+            APPROVED_COMMENT,
+            REJECTED_COMMENT,
+          } = oHeadModel.getProperty("/results/0");
+
+          return {
+            action: "EDIT_RESUBMIT",
+            REQUEST_NO: REQUEST_NO,
+            PoVimhead: [
+              {
+                SUPPLIER_NUMBER: SUPPLIER_NUMBER || "",
+                COMPANY_CODE: COMPANY_CODE || "",
+                SUPPLIER: SUPPLIER || "",
+                INVOICE_NO: INVOICE_NO || "",
+                INVOICE_DATE: INVOICE_DATE || "",
+                PO_NUMBER: PO_NUMBER || "",
+                INVOICE_AMOUNT: INVOICE_AMOUNT || "",
+                APPROVED_COMMENT: APPROVED_COMMENT || "",
+                REJECTED_COMMENT: REJECTED_COMMENT || "",
+                VENDOR_ADDRESS: VENDOR_ADDRESS || "",
+                BANK_ACCOUNT_NO: BANK_ACCOUNT_NO || "",
+                BANK_NAME: BANK_NAME || "",
+                PURCHASE_ORG: PURCHASE_ORG || "",
+                PURCHASE_GROUP: PURCHASE_GROUP || "",
+                CURRENCY: CURRENCY || "",
+                DOWNPAYMENT_AMOUNT: DOWNPAYMENT_AMOUNT || "",
+                DOWNPAYMENT_PERCENTAGE: DOWNPAYMENT_PERCENTAGE || "",
+                DOWNPAYMENT_DUE_DATE: DOWNPAYMENT_DUE_DATE || "",
+              },
+            ],
+            PoVimitem:
+              this._cleanItems(oItemsModel.getProperty("/results")) || [],
+            Attachment:
+              this._cleanItems(oAttachmentModel.getProperty("/attachments")) ||
+              [],
+          };
+        },
+
+        _cleanItems: function (aItems) {
+          const excludedProps = new Set([
+            "__metadata",
+            "_id",
+            "ATTACHMENT_ID",
+            "REQUEST_NO",
+            "STATUS",
+          ]);
+
+          return (aItems || []).map((item) => {
+            const cleanedItem = {};
+            for (const [key, value] of Object.entries(item)) {
+              if (!excludedProps.has(key)) {
+                cleanedItem[key] = value;
+              }
+            }
+            return cleanedItem;
+          });
+        },
+
+        onPressReSubmit: function () {
+          const oView = this.getView();
+          const oModel = oView.getModel();
+          const oEditStateModel = this.getView().getModel("oEditStateModel");
+          const oPayload = this._preparePayload();
+
+          if (!oPayload) {
+            this._showError();
+          }
+
+          MessageBox.confirm("Do you want to resubmit this invoice?", {
+            title: "Confirm Submission",
+            actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+            onClose: function (oAction) {
+              if (oAction === MessageBox.Action.OK) {
+                oView.setBusy(true);
+
+                oModel.create("/PostNPOVimData", oPayload, {
+                  success: function () {
+                    oView.setBusy(false);
+                    oEditStateModel.setProperty("/isEditMode", false);
+                    MessageBox.success("Invoice submitted successfully.", {
+                      onClose: function () {
+                        this.getOwnerComponent()
+                          .getRouter()
+                          .navTo("Routeindex");
+                      }.bind(this),
+                    });
+                  }.bind(this),
+                  error: function (oError) {
+                    console.error("Submission error:", oError);
+                    oView.setBusy(false);
+                    MessageBox.error("Submission failed. Please try again.");
+                  },
+                });
+              }
+            }.bind(this),
+          });
         },
 
         handleClose: function () {

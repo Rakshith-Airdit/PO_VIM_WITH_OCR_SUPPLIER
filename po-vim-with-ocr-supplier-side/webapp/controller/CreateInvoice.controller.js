@@ -25,61 +25,57 @@ sap.ui.define(
             .attachPatternMatched(this._onPatternMatched, this);
         },
 
-        onBeforeItemAdded: async function (oEvent) {
+        onBeforeItemAdded: function (oEvent) {
           const oFile = oEvent.getParameter("item").getFileObject();
-
-          if (!oFile || oFile.type !== "application/pdf") {
+          // Check file type and size before allowing the item to be added
+          if (oFile.type !== "application/pdf") {
             MessageToast.show("Only PDF files are allowed.");
             oEvent.preventDefault();
             return;
           }
+        },
 
-          const oReader = new FileReader();
+        onAfterItemAdded: function (oEvent) {
+          const oItem = oEvent.getParameter("item");
+          const oFile = oItem.getFileObject();
+          const oUploadModel = this.getView().getModel("uploadModel");
+
           const blobUrl = URL.createObjectURL(oFile);
-          console.log(blobUrl);
 
-          const that = this;
-          oReader.onload = function (e) {
+          // Get the iframe element directly from the DOM
+          const iframe = document.getElementById("pdfFrame");
+          if (iframe) {
+            // Set the src and make the iframe visible
+            iframe.src = blobUrl;
+            iframe.style.display = "block"; // or "initial" or "inline"
+          }
+
+          // Use FileReader to get the Base64 string for the backend payload
+          const oReader = new FileReader();
+          oReader.onload = (e) => {
             const base64 = e.target.result.split(",")[1];
-            console.log(base64);
-            const oUploadModel = that.getView().getModel("uploadModel");
-
             oUploadModel.setProperty("/file", base64);
             oUploadModel.setProperty("/fileName", oFile.name);
             oUploadModel.setProperty("/fileLoaded", true);
-
-            const iframe = document.getElementById("pdfFrame");
-
-            if (iframe) {
-              iframe.src = e.target.result;
-            }
-
-            // Hide upload set and show clear button after file is loaded
-            that.getView().byId("uploadSet").setVisible(false);
-            that.getView().byId("idClearBtn").setVisible(true);
-            that.getView().byId("pdfPreview").setVisible(true); // Make the HTML control visible
             MessageToast.show("PDF loaded for preview.");
           };
-
-          oReader.onerror = function (error) {
+          oReader.onerror = (error) => {
             MessageToast.show("Error reading file.");
             console.error(error);
           };
-
           oReader.readAsDataURL(oFile);
-          //   oEvent.preventDefault();
-        },
 
-        _onPatternMatched: function () {
-          // This function should reset the view state
-          this.onClearPreview();
-          this.clearForm();
+          // Update other UI elements
+          this.getView().byId("uploadSet").setVisible(false);
+          this.getView().byId("idClearBtn").setVisible(true);
         },
 
         onClearPreview: function () {
           const iframe = document.getElementById("pdfFrame");
-          if (iframe) {
+          if (iframe && iframe.src) {
+            URL.revokeObjectURL(iframe.src);
             iframe.src = "";
+            iframe.style.display = "none";
           }
 
           const oUploadModel = this.getView().getModel("uploadModel");
@@ -89,9 +85,18 @@ sap.ui.define(
             oUploadModel.setProperty("/fileLoaded", false);
           }
 
+          const oUploadSet = this.getView().byId("uploadSet");
+          oUploadSet.removeAllItems();
+
+          // Show the upload control and hide the clear button
           this.getView().byId("uploadSet").setVisible(true);
           this.getView().byId("idClearBtn").setVisible(false);
-          this.getView().byId("pdfPreview").setVisible(false); // Make the HTML control invisible again
+        },
+
+        _onPatternMatched: function () {
+          // This function should reset the view state
+          this.onClearPreview();
+          this.clearForm();
         },
 
         onSave: function () {
@@ -132,6 +137,7 @@ sap.ui.define(
                 INVOICE_DATE: formattedDate,
                 INVOICE_AMOUNT: invoiceAmount,
                 PO_NUMBER: poNumber,
+                SOURCE_TYPE: "02-Portal",
               },
             ],
             PoVimitem: [],
@@ -153,22 +159,27 @@ sap.ui.define(
               if (oAction === MessageBox.Action.OK) {
                 oView.setBusy(true);
                 oModel.create("/PostPOVimDatawithOCR", payload, {
-                  success: function () {
+                  success: function (oRes) {
+                    let successMessage = oRes.message
+                      ? oRes.message
+                      : "Invoice submitted successfully.";
                     oView.setBusy(false);
                     this.onClearPreview();
                     this.clearForm();
-                    MessageBox.success("Invoice submitted successfully.", {
+                    MessageBox.success(successMessage, {
                       onClose: function () {
                         this.getOwnerComponent()
                           .getRouter()
-                          .navTo("Routeindex");
+                          .navTo("RouteInvoiceList");
                       }.bind(this),
                     });
                   }.bind(this),
                   error: function (oError) {
                     console.error("Submission error:", oError);
                     oView.setBusy(false);
-                    MessageBox.error("Submission failed. Please try again.");
+                    MessageBox.error(
+                      "Submission failed. Please try again." + oError
+                    );
                   },
                 });
               }

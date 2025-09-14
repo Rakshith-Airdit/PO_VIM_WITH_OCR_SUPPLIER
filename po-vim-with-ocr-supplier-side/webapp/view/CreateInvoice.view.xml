@@ -31,59 +31,6 @@
                                             id="panel0"
                                         >
                                             <m:content>
-                                                <m:VBox class="sapUiTinyMargin">
-                                                    <m:HBox
-                                                        justifyContent="End"
-                                                    >
-                                                        <m:Button
-                                                            icon="sap-icon://clear-all"
-                                                            id="idClearBtn"
-                                                            tooltip="Close Preview"
-                                                            press=".onClearPreview"
-                                                            visible="false"
-                                                        />
-                                                    </m:HBox>
-
-                                                    <m:VBox
-                                                        id="fileUploadContainer"
-                                                    >
-                                                        <upload:UploadSet
-                                                            id="uploadSet"
-                                                            instantUpload="true"
-                                                            uploadEnabled="true"
-                                                            beforeItemAdded="onBeforeItemAdded"
-                                                            maxFileSize="10"
-                                                            afterItemAdded="setVisibility"
-                                                            sameFilenameAllowed="false"
-                                                            multiple="false"
-                                                            visible="true"
-                                                        >
-                                                            <upload:toolbar />
-                                                        </upload:UploadSet>
-                                                        <core:HTML
-                                                            id="pdfPreview"
-                                                            content='&lt;iframe id="pdfFrame" width="100%" height="700px" style="border:none;"&gt;&lt;/iframe&gt;'
-                                                            sanitizeContent="false"
-                                                            visible="false"
-                                                        />
-                                                    </m:VBox>
-                                                </m:VBox>
-                                            </m:content>
-                                        </m:Panel>
-                                    </layout:content>
-                                </layout:SplitPane>
-
-                                <layout:SplitPane
-                                    requiredParentWidth="50"
-                                    id="pane1"
-                                >
-                                    <layout:content>
-                                        <m:Panel
-                                            height="100%"
-                                            backgroundDesign="Transparent"
-                                            id="panel1"
-                                        >
-                                            <m:content>
                                                 <form:Form
                                                     editable="true"
                                                     id="form0"
@@ -162,6 +109,59 @@
                                                         />
                                                     </form:layout>
                                                 </form:Form>
+                                            </m:content>
+                                        </m:Panel>
+                                    </layout:content>
+                                </layout:SplitPane>
+
+                                <layout:SplitPane
+                                    requiredParentWidth="50"
+                                    id="pane1"
+                                >
+                                    <layout:content>
+                                        <m:Panel
+                                            height="100%"
+                                            backgroundDesign="Transparent"
+                                            id="panel1"
+                                        >
+                                            <m:content>
+                                                <m:VBox class="sapUiTinyMargin">
+                                                    <m:HBox
+                                                        justifyContent="End"
+                                                    >
+                                                        <m:Button
+                                                            icon="sap-icon://clear-all"
+                                                            id="idClearBtn"
+                                                            tooltip="Close Preview"
+                                                            press=".onClearPreview"
+                                                            visible="false"
+                                                        />
+                                                    </m:HBox>
+
+                                                    <m:VBox
+                                                        id="fileUploadContainer"
+                                                    >
+                                                        <upload:UploadSet
+                                                            id="uploadSet"
+                                                            instantUpload="true"
+                                                            uploadEnabled="true"
+                                                            beforeItemAdded="onBeforeItemAdded"
+                                                            maxFileSize="10"
+                                                            afterItemAdded="onAfterItemAdded"
+                                                            sameFilenameAllowed="false"
+                                                            multiple="false"
+                                                            visible="true"
+                                                        >
+                                                            <upload:toolbar />
+                                                        </upload:UploadSet>
+
+                                                        <core:HTML
+                                                            id="pdfPreview"
+                                                            content='&lt;iframe id="pdfFrame" width="100%" height="700px" style="border:none; display:none;";"&gt;&lt;//iframe&gt;'
+                                                            sanitizeContent="false"
+                                                        />
+                                                    </m:VBox>
+                                                </m:VBox>
                                             </m:content>
                                         </m:Panel>
                                     </layout:content>

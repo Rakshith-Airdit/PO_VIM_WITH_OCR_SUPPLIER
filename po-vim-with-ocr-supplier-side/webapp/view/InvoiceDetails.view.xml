@@ -469,6 +469,28 @@
                         </ObjectPageSubSection>
                     </subSections>
                 </ObjectPageSection>
+
+                <ObjectPageSection
+                    title="Comments"
+                    titleUppercase="false"
+                    visible="{= (${oHeaderModel>/results/0/STATUS_DESC} === 'Approved' || ${oHeaderModel>/results/0/STATUS_DESC} === 'Rejected') &amp;&amp; ${oCommentsModel>/comments}.length > 0 }"
+                >
+                    <ObjectPageSubSection>
+                        <blocks>
+                            <m:List
+                                id="commentsList"
+                                items="{oCommentsModel>/comments}"
+                                inset="false"
+                            >
+                                <m:FeedListItem
+                                    icon="sap-icon://customer"
+                                    text="{oCommentsModel>Text}"
+                                    sender="Comment"
+                                />
+                            </m:List>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </ObjectPageSection>
             </sections>
 
             <footer>

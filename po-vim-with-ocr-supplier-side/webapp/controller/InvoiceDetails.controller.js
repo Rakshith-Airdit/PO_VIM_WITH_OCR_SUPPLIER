@@ -41,6 +41,13 @@ sap.ui.define(
             new JSONModel({ isEditMode: false, isResubmitVisible: false }),
             "oEditStateModel"
           );
+
+          this.getView().setModel(
+            new JSONModel({
+              comments: [],
+            }),
+            "oCommentsModel"
+          );
         },
 
         _onPatternMatched: async function (oEvent) {
@@ -78,6 +85,7 @@ sap.ui.define(
           const oItemsModel = this.getView().getModel("oItemsModel");
           const oAttachmentsModel =
             this.getView().getModel("oAttachmentsModel");
+          const oCommentsModel = this.getView().getModel("oCommentsModel");
 
           let aFilters = [
             new Filter("PO_NUMBER", FilterOperator.EQ, poNumber),
@@ -95,26 +103,38 @@ sap.ui.define(
               aHeaderFilter,
               "oOCRHeaderModel"
             ),
-            // this._loadEntity("/VIM_PO_OCR_ITEM", [], "oItemsModel"),
-            // this._loadEntity("/Attachment_PO_VIM_OCR", [], "oItemsModel"),
           ]);
 
           const oHeaderData = oHeaderModel.getProperty("/results/0");
           const oOCRHeaderData = oOCRHeaderModel.getProperty("/results/0");
-          // const oItemsData = oItemsModel.getProperty("/results");
           const oItemsData = oHeaderData?.TO_VIM_PO_OCR_ITEM?.results || [];
           const oAttachmentsData = oHeaderData?.ATTACHMENTS?.results || [];
 
-          debugger;
-          console.log(
-            oHeaderData,
-            oOCRHeaderData,
-            oItemsData,
-            oAttachmentsData
-          );
+          let aCommentsData = [];
+
+          if (
+            oHeaderData?.STATUS_DESC === "Approved" &&
+            oHeaderData?.APPROVED_COMMENT
+          ) {
+            aCommentsData.push({
+              Text: oHeaderData.APPROVED_COMMENT,
+            });
+          } else if (
+            oHeaderData?.STATUS_DESC === "Rejected" &&
+            oHeaderData?.REJECTED_COMMENT
+          ) {
+            aCommentsData.push({
+              Text: oHeaderData.REJECTED_COMMENT,
+            });
+          } else {
+            aCommentsData.push({
+              Text: "COMMENT",
+            });
+          }
 
           oItemsModel.setProperty("/results", oItemsData);
           oAttachmentsModel.setProperty("/attachments", oAttachmentsData);
+          oCommentsModel.setProperty("/comments", aCommentsData);
 
           console.log("Models Data Set");
         },
@@ -146,7 +166,7 @@ sap.ui.define(
           let oEditStateModel = this.getView().getModel("oEditStateModel");
           oEditStateModel.setProperty("/isEditMode", false);
           // Optionally, refresh the model to discard unsaved changes
-          // this.getView().getModel("oItemsModel").refresh(true);
+          this.getView().getModel("oItemsModel").refresh(true);
         },
 
         _showError: function (
@@ -273,7 +293,7 @@ sap.ui.define(
           } = oHeadModel.getProperty("/results/0");
 
           return {
-            action: "EDIT_RESUBMIT",
+            action: "EDIT_RESUBMIT_BY_SUPPLIER",
             REQUEST_NO: REQUEST_NO,
             PoVimhead: [
               {
@@ -342,7 +362,7 @@ sap.ui.define(
               if (oAction === MessageBox.Action.OK) {
                 oView.setBusy(true);
 
-                oModel.create("/PostNPOVimData", oPayload, {
+                oModel.create("/PostPOVimDatawithOCR", oPayload, {
                   success: function () {
                     oView.setBusy(false);
                     oEditStateModel.setProperty("/isEditMode", false);

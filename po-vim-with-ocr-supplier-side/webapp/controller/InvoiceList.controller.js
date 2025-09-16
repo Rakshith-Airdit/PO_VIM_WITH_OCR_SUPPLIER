@@ -4,7 +4,22 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) => {
   return Controller.extend(
     "com.povimwithocrsupplier.povimwithocrsupplierside.controller.InvoiceList",
     {
-      onInit() {},
+      onInit() {
+        this.getOwnerComponent()
+          .getRouter()
+          .getRoute("RouteInvoiceList")
+          .attachPatternMatched(this._onPatternMatched, this);
+      },
+
+      _onPatternMatched: function (oEvent) {
+        const oSmartTable = this.byId("idPendingInvoicesTable");
+
+        // Set busy state and rebind the table
+        if (oSmartTable) {
+          // oSmartTable.setBusy(true);
+          oSmartTable.rebindTable(true);
+        }
+      },
 
       onCreatePress: function (oEvent) {
         this.getOwnerComponent().getRouter().navTo("RouteCreateInvoice");
@@ -62,8 +77,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) => {
           return "Indication11";
         }
         return "None";
-      }
-      
+      },
     }
   );
 });

@@ -88,6 +88,33 @@
                     </Collection>
                 </Annotation>
             </Annotations>
+            <Annotations Target="SAP.PendingTab/PO_NUMBER">
+                <Annotation Term="Common.Label" String="PO Number"/>
+            </Annotations>
+            <Annotations Target="SAP.PendingTab/INVOICE_NO">
+                <Annotation Term="Common.Label" String="Invoice Number"/>
+            </Annotations>
+            <Annotations Target="SAP.PendingTab/INVOICE_AMOUNT">
+                <Annotation Term="Common.Label" String="Invoice Amount"/>
+            </Annotations>
+            <Annotations Target="SAP.ApprovedTab/PO_NUMBER">
+                <Annotation Term="Common.Label" String="PO Number"/>
+            </Annotations>
+            <Annotations Target="SAP.ApprovedTab/INVOICE_NO">
+                <Annotation Term="Common.Label" String="Invoice Number"/>
+            </Annotations>
+            <Annotations Target="SAP.ApprovedTab/INVOICE_AMOUNT">
+                <Annotation Term="Common.Label" String="Invoice Amount"/>
+            </Annotations>
+            <Annotations Target="SAP.RejectedTab/PO_NUMBER">
+                <Annotation Term="Common.Label" String="PO Number"/>
+            </Annotations>
+            <Annotations Target="SAP.RejectedTab/INVOICE_NO">
+                <Annotation Term="Common.Label" String="Invoice Number"/>
+            </Annotations>
+            <Annotations Target="SAP.RejectedTab/INVOICE_AMOUNT">
+                <Annotation Term="Common.Label" String="Invoice Amount"/>
+            </Annotations>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>
